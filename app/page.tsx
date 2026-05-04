@@ -109,10 +109,10 @@ export default function HomePage() {
           <div className="p-2 bg-green-500/20 rounded-lg">
             <Gamepad2 className="w-6 h-6 text-green-400" />
           </div>
-          <h1 className="text-3xl font-bold text-white">Game Catalog</h1>
+          <h1 className="text-3xl font-bold text-white">Catálogo de Jogos</h1>
         </div>
         <p className="text-slate-400 ml-14">
-          Browse, manage and discover your favorite games
+          Navegue, gerencie e descubra seus jogos favoritos
         </p>
       </motion.div>
 
@@ -130,7 +130,7 @@ export default function HomePage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search games by name..."
+            placeholder="Pesquisar jogos pelo nome..."
             className="w-full pl-10 pr-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg
                        text-white placeholder-slate-400 focus:outline-none focus:ring-2
                        focus:ring-green-500 text-sm transition-colors"
@@ -148,7 +148,7 @@ export default function HomePage() {
                        text-sm appearance-none cursor-pointer transition-colors"
           >
             {GENRES.map((g) => (
-              <option key={g} value={g}>{g === "All" ? "All Genres" : g}</option>
+              <option key={g} value={g}>{g === "All" ? "Todos os Gêneros" : g}</option>
             ))}
           </select>
         </div>
@@ -164,10 +164,9 @@ export default function HomePage() {
         >
           <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
           <div>
-            <p className="font-semibold text-sm">Database not connected</p>
+            <p className="font-semibold text-sm">Banco de dados não conectado</p>
             <p className="text-xs text-yellow-400/80 mt-0.5">
-              Open <code className="bg-yellow-500/20 px-1 rounded">.env.local</code> and
-              add your Supabase URL and anon key, then restart the server.
+              Abra o <code className="bg-yellow-500/20 px-1 rounded">.env.local</code> e adicione sua URL e chave anon do Supabase, depois reinicie o servidor.
             </p>
           </div>
         </motion.div>
@@ -176,7 +175,7 @@ export default function HomePage() {
       {/* ── Games Count ── */}
       {!dbError && (
         <p className="text-slate-500 text-sm mb-5">
-          {loading ? "Loading..." : `${filteredGames.length} game${filteredGames.length !== 1 ? "s" : ""} found`}
+          {loading ? "Carregando..." : `${filteredGames.length} jogo${filteredGames.length !== 1 ? "s" : ""} encontrado${filteredGames.length !== 1 ? "s" : ""}`}
         </p>
       )}
 
@@ -195,9 +194,9 @@ export default function HomePage() {
           className="text-center py-20"
         >
           <Gamepad2 className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-slate-400">No games found</h3>
+          <h3 className="text-xl font-semibold text-slate-400">Nenhum jogo encontrado</h3>
           <p className="text-slate-500 mt-2">
-            {search ? `No games match "${search}"` : "Try a different genre filter."}
+            {search ? `Nenhum jogo corresponde a "${search}"` : "Tente um filtro diferente."}
           </p>
         </motion.div>
       )}

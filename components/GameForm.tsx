@@ -48,7 +48,7 @@ type GameFormProps = {
 export default function GameForm({
   initialData = {},
   onSubmit,
-  submitLabel = "Save Game",
+  submitLabel = "Salvar Jogo",
 }: GameFormProps) {
   // Form state — each field mirrors a column in the DB
   const [name, setName] = useState(initialData.name ?? "");
@@ -66,14 +66,14 @@ export default function GameForm({
   // ── Validation ───────────────────────────────────────────────
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!name.trim()) newErrors.name = "Name is required";
-    if (!genre) newErrors.genre = "Genre is required";
-    if (!platform) newErrors.platform = "Platform is required";
-    if (!releaseYear) newErrors.releaseYear = "Year is required";
+    if (!name.trim()) newErrors.name = "O nome é obrigatório";
+    if (!genre) newErrors.genre = "O gênero é obrigatório";
+    if (!platform) newErrors.platform = "A plataforma é obrigatória";
+    if (!releaseYear) newErrors.releaseYear = "O ano é obrigatório";
     else if (isNaN(Number(releaseYear)) || Number(releaseYear) < 1970 || Number(releaseYear) > 2030)
-      newErrors.releaseYear = "Enter a valid year (1970–2030)";
-    if (!description.trim()) newErrors.description = "Description is required";
-    if (!imageUrl.trim()) newErrors.imageUrl = "Image URL is required";
+      newErrors.releaseYear = "Insira um ano válido (1970–2030)";
+    if (!description.trim()) newErrors.description = "A descrição é obrigatória";
+    if (!imageUrl.trim()) newErrors.imageUrl = "A URL da imagem é obrigatória";
     return newErrors;
   };
 
@@ -114,13 +114,13 @@ export default function GameForm({
       {/* ── Name ── */}
       <div>
         <label className="block text-sm font-medium text-slate-300 mb-1">
-          Game Name <span className="text-red-400">*</span>
+          Nome do Jogo <span className="text-red-400">*</span>
         </label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. The Legend of Zelda"
+          placeholder="Ex: The Legend of Zelda"
           className={inputClass("name")}
         />
         {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
@@ -130,14 +130,14 @@ export default function GameForm({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-1">
-            Genre <span className="text-red-400">*</span>
+            Gênero <span className="text-red-400">*</span>
           </label>
           <select
             value={genre}
             onChange={(e) => setGenre(e.target.value)}
             className={inputClass("genre")}
           >
-            <option value="">Select genre...</option>
+            <option value="">Selecione o gênero...</option>
             {GENRES.map((g) => (
               <option key={g} value={g}>{g}</option>
             ))}
@@ -147,14 +147,14 @@ export default function GameForm({
 
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-1">
-            Platform <span className="text-red-400">*</span>
+            Plataforma <span className="text-red-400">*</span>
           </label>
           <select
             value={platform}
             onChange={(e) => setPlatform(e.target.value)}
             className={inputClass("platform")}
           >
-            <option value="">Select platform...</option>
+            <option value="">Selecione a plataforma...</option>
             {PLATFORMS.map((p) => (
               <option key={p} value={p}>{p}</option>
             ))}
@@ -167,7 +167,7 @@ export default function GameForm({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-1">
-            Studio <span className="text-red-400">*</span>
+            Estúdio <span className="text-red-400">*</span>
           </label>
           <select
             value={studioId}
@@ -188,13 +188,13 @@ export default function GameForm({
 
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-1">
-            Release Year <span className="text-red-400">*</span>
+            Ano de Lançamento <span className="text-red-400">*</span>
           </label>
           <input
             type="number"
             value={releaseYear}
             onChange={(e) => setReleaseYear(e.target.value)}
-            placeholder="e.g. 2024"
+            placeholder="Ex: 2024"
             min={1970}
             max={2030}
             className={inputClass("releaseYear")}
@@ -206,12 +206,12 @@ export default function GameForm({
       {/* ── Description ── */}
       <div>
         <label className="block text-sm font-medium text-slate-300 mb-1">
-          Description <span className="text-red-400">*</span>
+          Descrição <span className="text-red-400">*</span>
         </label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Brief description of the game..."
+          placeholder="Breve descrição do jogo..."
           rows={4}
           className={inputClass("description")}
         />
@@ -221,13 +221,13 @@ export default function GameForm({
       {/* ── Image URL ── */}
       <div>
         <label className="block text-sm font-medium text-slate-300 mb-1 flex items-center gap-1">
-          <ImageIcon className="w-3.5 h-3.5" /> Image URL <span className="text-red-400">*</span>
+          <ImageIcon className="w-3.5 h-3.5" /> URL da Imagem <span className="text-red-400">*</span>
         </label>
         <input
           type="url"
           value={imageUrl}
           onChange={(e) => setImageUrl(e.target.value)}
-          placeholder="https://example.com/game-cover.jpg"
+          placeholder="https://exemplo.com/capa-do-jogo.jpg"
           className={inputClass("imageUrl")}
         />
         {errors.imageUrl && <p className="text-red-400 text-xs mt-1">{errors.imageUrl}</p>}
@@ -253,7 +253,7 @@ export default function GameForm({
         ) : (
           <Save className="w-4 h-4" />
         )}
-        {loading ? "Saving..." : submitLabel}
+        {loading ? "Salvando..." : submitLabel}
       </button>
     </form>
   );

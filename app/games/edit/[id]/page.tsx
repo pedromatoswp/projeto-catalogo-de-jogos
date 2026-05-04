@@ -77,9 +77,9 @@ export default function EditGamePage() {
   if (notFound || !game) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-2xl font-bold text-white mb-2">Game not found</h2>
-        <p className="text-slate-400 mb-6">This game doesn&apos;t exist or was deleted.</p>
-        <Link href="/" className="text-green-400 hover:underline">← Back to Catalog</Link>
+        <h2 className="text-2xl font-bold text-white mb-2">Jogo não encontrado</h2>
+        <p className="text-slate-400 mb-6">Este jogo não existe ou foi deletado.</p>
+        <Link href="/" className="text-green-400 hover:underline">← Voltar ao Catálogo</Link>
       </div>
     );
   }
@@ -93,7 +93,7 @@ export default function EditGamePage() {
         className="inline-flex items-center gap-2 text-slate-400 hover:text-white
                    transition-colors text-sm mb-6"
       >
-        <ArrowLeft className="w-4 h-4" /> Back to Catalog
+        <ArrowLeft className="w-4 h-4" /> Voltar ao Catálogo
       </Link>
 
       {/* ── Page header ── */}
@@ -107,11 +107,11 @@ export default function EditGamePage() {
             <Edit3 className="w-5 h-5 text-blue-400" />
           </div>
           <h1 className="text-2xl font-bold text-white">
-            Edit: <span className="text-blue-400">{game.name}</span>
+            Editar: <span className="text-blue-400">{game.name}</span>
           </h1>
         </div>
         <p className="text-slate-400 ml-12 text-sm">
-          Update the details below and save your changes.
+          Atualize os detalhes abaixo e salve as alterações.
         </p>
       </motion.div>
 
@@ -126,7 +126,7 @@ export default function EditGamePage() {
         <GameForm
           initialData={game}
           onSubmit={handleSubmit}
-          submitLabel="Save Changes"
+          submitLabel="Salvar Alterações"
         />
       </motion.div>
     </div>

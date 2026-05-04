@@ -54,7 +54,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
           onError={(e) => {
             // Fallback if the image fails to load
             (e.target as HTMLImageElement).src =
-              "https://placehold.co/400x240/1E293B/22C55E?text=No+Image";
+              "https://placehold.co/400x240/1E293B/22C55E?text=Sem+Imagem";
           }}
         />
         {/* Genre badge overlay */}
@@ -83,7 +83,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
         {/* Relational data: Studio */}
         {game.studios && (
           <p className="text-xs text-indigo-400 font-semibold mb-3">
-            By {game.studios.name}
+            Por {game.studios.name}
           </p>
         )}
 
@@ -99,7 +99,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
                        bg-blue-500/10 text-blue-400 border border-blue-500/30
                        hover:bg-blue-500/20 transition-colors text-sm font-medium"
           >
-            <Pencil className="w-3.5 h-3.5" /> Edit
+            <Pencil className="w-3.5 h-3.5" /> Editar
           </Link>
 
           {/* Delete → calls onDelete callback */}
@@ -109,7 +109,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
                        bg-red-500/10 text-red-400 border border-red-500/30
                        hover:bg-red-500/20 transition-colors text-sm font-medium"
           >
-            <Trash2 className="w-3.5 h-3.5" /> Delete
+            <Trash2 className="w-3.5 h-3.5" /> Deletar
           </button>
         </div>
       </div>

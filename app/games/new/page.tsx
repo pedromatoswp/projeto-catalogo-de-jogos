@@ -44,7 +44,7 @@ export default function NewGamePage() {
         className="inline-flex items-center gap-2 text-slate-400 hover:text-white
                    transition-colors text-sm mb-6"
       >
-        <ArrowLeft className="w-4 h-4" /> Back to Catalog
+        <ArrowLeft className="w-4 h-4" /> Voltar ao Catálogo
       </Link>
 
       {/* ── Page header ── */}
@@ -57,10 +57,10 @@ export default function NewGamePage() {
           <div className="p-2 bg-green-500/20 rounded-lg">
             <PlusCircle className="w-5 h-5 text-green-400" />
           </div>
-          <h1 className="text-2xl font-bold text-white">Add New Game</h1>
+          <h1 className="text-2xl font-bold text-white">Adicionar Novo Jogo</h1>
         </div>
         <p className="text-slate-400 ml-12 text-sm">
-          Fill in the details below to add a game to the catalog.
+          Preencha os detalhes abaixo para adicionar um jogo ao catálogo.
         </p>
       </motion.div>
 
@@ -71,7 +71,7 @@ export default function NewGamePage() {
         transition={{ delay: 0.1 }}
         className="bg-slate-800 border border-slate-700 rounded-2xl p-6"
       >
-        <GameForm onSubmit={handleSubmit} submitLabel="Add Game" />
+        <GameForm onSubmit={handleSubmit} submitLabel="Adicionar Jogo" />
       </motion.div>
     </div>
   );

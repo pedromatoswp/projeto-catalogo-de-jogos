@@ -42,7 +42,7 @@ export default function DeleteModal({ gameName, onConfirm, onCancel }: DeleteMod
               <div className="p-2 bg-red-500/20 rounded-lg">
                 <AlertTriangle className="w-5 h-5 text-red-400" />
               </div>
-              <h3 className="text-lg font-bold text-white">Delete Game</h3>
+              <h3 className="text-lg font-bold text-white">Deletar Jogo</h3>
             </div>
             <button onClick={onCancel} className="text-slate-400 hover:text-white transition-colors">
               <X className="w-5 h-5" />
@@ -51,9 +51,9 @@ export default function DeleteModal({ gameName, onConfirm, onCancel }: DeleteMod
 
           {/* Message */}
           <p className="text-slate-400 text-sm mb-6">
-            Are you sure you want to delete{" "}
+            Tem certeza que deseja deletar{" "}
             <span className="text-white font-semibold">&quot;{gameName}&quot;</span>?
-            This action cannot be undone.
+            Esta ação não pode ser desfeita.
           </p>
 
           {/* Action buttons */}
@@ -63,14 +63,14 @@ export default function DeleteModal({ gameName, onConfirm, onCancel }: DeleteMod
               className="flex-1 py-2 px-4 rounded-lg border border-slate-600 text-slate-300
                          hover:bg-slate-700 transition-colors text-sm font-medium"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               onClick={onConfirm}
               className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg
                          bg-red-500 hover:bg-red-400 text-white transition-colors text-sm font-medium"
             >
-              <Trash2 className="w-4 h-4" /> Delete
+              <Trash2 className="w-4 h-4" /> Deletar
             </button>
           </div>
         </motion.div>
