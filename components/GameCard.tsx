@@ -71,7 +71,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
         <h2 className="text-lg font-bold text-white mb-1 line-clamp-1">{game.name}</h2>
 
         {/* Meta info */}
-        <div className="flex items-center gap-4 text-xs text-slate-400 mb-3">
+        <div className="flex items-center gap-4 text-xs text-slate-400 mb-2">
           <span className="flex items-center gap-1">
             <Monitor className="w-3 h-3" /> {game.platform}
           </span>
@@ -79,6 +79,13 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
             <Calendar className="w-3 h-3" /> {game.release_year}
           </span>
         </div>
+
+        {/* Relational data: Studio */}
+        {game.studios && (
+          <p className="text-xs text-indigo-400 font-semibold mb-3">
+            By {game.studios.name}
+          </p>
+        )}
 
         {/* Description — limited to 2 lines */}
         <p className="text-sm text-slate-400 line-clamp-2 flex-1">{game.description}</p>

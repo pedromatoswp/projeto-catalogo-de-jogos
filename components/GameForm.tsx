@@ -54,6 +54,7 @@ export default function GameForm({
   const [name, setName] = useState(initialData.name ?? "");
   const [genre, setGenre] = useState(initialData.genre ?? "");
   const [platform, setPlatform] = useState(initialData.platform ?? "");
+  const [studioId, setStudioId] = useState(initialData.studio_id?.toString() ?? "1");
   const [releaseYear, setReleaseYear] = useState(
     initialData.release_year?.toString() ?? ""
   );
@@ -94,6 +95,7 @@ export default function GameForm({
         release_year: Number(releaseYear),
         description: description.trim(),
         image_url: imageUrl.trim(),
+        studio_id: Number(studioId),
       });
     } finally {
       setLoading(false);
@@ -161,21 +163,44 @@ export default function GameForm({
         </div>
       </div>
 
-      {/* ── Release Year ── */}
-      <div>
-        <label className="block text-sm font-medium text-slate-300 mb-1">
-          Release Year <span className="text-red-400">*</span>
-        </label>
-        <input
-          type="number"
-          value={releaseYear}
-          onChange={(e) => setReleaseYear(e.target.value)}
-          placeholder="e.g. 2024"
-          min={1970}
-          max={2030}
-          className={inputClass("releaseYear")}
-        />
-        {errors.releaseYear && <p className="text-red-400 text-xs mt-1">{errors.releaseYear}</p>}
+      {/* ── Studio & Release Year (side by side) ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-1">
+            Studio <span className="text-red-400">*</span>
+          </label>
+          <select
+            value={studioId}
+            onChange={(e) => setStudioId(e.target.value)}
+            className={inputClass("studioId")}
+          >
+            <option value="1">EA Sports</option>
+            <option value="2">Riot Games</option>
+            <option value="3">Epic Games</option>
+            <option value="4">2K Sports</option>
+            <option value="5">Team Cherry</option>
+            <option value="6">Mojang</option>
+            <option value="7">Rockstar Games</option>
+            <option value="8">Activision</option>
+            <option value="9">FromSoftware</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-1">
+            Release Year <span className="text-red-400">*</span>
+          </label>
+          <input
+            type="number"
+            value={releaseYear}
+            onChange={(e) => setReleaseYear(e.target.value)}
+            placeholder="e.g. 2024"
+            min={1970}
+            max={2030}
+            className={inputClass("releaseYear")}
+          />
+          {errors.releaseYear && <p className="text-red-400 text-xs mt-1">{errors.releaseYear}</p>}
+        </div>
       </div>
 
       {/* ── Description ── */}
