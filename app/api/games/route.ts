@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     // Build the query
     let query = supabase
       .from("games")
-      .select("*")
+      .select("*, studios(name)")
       .order("id", { ascending: true });
 
     // If a genre filter was passed, add a WHERE clause
