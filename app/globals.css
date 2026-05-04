@@ -1,0 +1,40 @@
+/**
+ * app/globals.css
+ *
+ * Global styles and Tailwind CSS imports.
+ * We also define some CSS custom properties (variables) here
+ * so the gamer color palette is consistent everywhere.
+ */
+
+@import "tailwindcss";
+
+/* ── Custom scrollbar styling (optional, looks great on Chrome) ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #22c55e;
+}
+
+/* ── Smooth scroll for the whole page ── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Remove default button/input outline and replace with our own ── */
+* {
+  box-sizing: border-box;
+}
+
+/* ── Select element styling for dark theme ── */
+select option {
+  background-color: #1e293b;
+  color: #e2e8f0;
+}
