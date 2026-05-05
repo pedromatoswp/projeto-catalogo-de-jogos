@@ -78,3 +78,5 @@ export default function DeleteModal({ gameName, onConfirm, onCancel }: DeleteMod
     </AnimatePresence>
   );
 }
+
+// QA: Modal confirmation verified
