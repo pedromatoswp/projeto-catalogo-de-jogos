@@ -25,12 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-slate-950 text-slate-100 min-h-screen`}>
+    <html lang="pt-BR">
+      <body className={`${inter.className} bg-black text-white min-h-screen`}>
         {/* Navbar is shared across all pages */}
         <Navbar />
-        {/* Page content renders here */}
-        <main>{children}</main>
+        {/* Page content renders here with proper spacing for fixed navbar */}
+        <main className="pt-16">{children}</main>
       </body>
     </html>
   );

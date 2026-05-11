@@ -3,114 +3,183 @@
 /**
  * components/GameCard.tsx
  *
- * Displays a single game with its image, name, genre, platform,
- * and action buttons (Edit / Delete).
- * Uses Framer Motion for smooth hover animation.
+ * Premium game card with modern hover effects
+ * Cinematic design with glassmorphism and gradient accents
  */
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Pencil, Trash2, Star, Calendar, Monitor } from "lucide-react";
+import { Pencil, Trash2, Star, Calendar, Monitor, Play, Eye } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Game } from "@/lib/supabase";
 
-// ── Color map: each genre gets its own badge color ──────────────
-const genreColors: Record<string, string> = {
-  FPS: "bg-red-500/20 text-red-400 border border-red-500/30",
-  Sports: "bg-blue-500/20 text-blue-400 border border-blue-500/30",
-  "Battle Royale": "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30",
-  Metroidvania: "bg-purple-500/20 text-purple-400 border border-purple-500/30",
-  Sandbox: "bg-green-500/20 text-green-400 border border-green-500/30",
-  "Action/Adventure": "bg-orange-500/20 text-orange-400 border border-orange-500/30",
+// ── Enhanced Color map with cyberpunk aesthetics ──────────────
+const genreColors: Record<string, { bg: string; text: string; border: string }> = {
+  FPS: { bg: "bg-red-500/20", text: "text-red-400", border: "border-red-500/30" },
+  Sports: { bg: "bg-blue-500/20", text: "text-blue-400", border: "border-blue-500/30" },
+  "Battle Royale": { bg: "bg-yellow-500/20", text: "text-yellow-400", border: "border-yellow-500/30" },
+  Metroidvania: { bg: "bg-purple-500/20", text: "text-purple-400", border: "border-purple-500/30" },
+  Sandbox: { bg: "bg-green-500/20", text: "text-green-400", border: "border-green-500/30" },
+  "Action/Adventure": { bg: "bg-orange-500/20", text: "text-orange-400", border: "border-orange-500/30" },
+  RPG: { bg: "bg-indigo-500/20", text: "text-indigo-400", border: "border-indigo-500/30" },
+  Strategy: { bg: "bg-cyan-500/20", text: "text-cyan-400", border: "border-cyan-500/30" },
+  Puzzle: { bg: "bg-pink-500/20", text: "text-pink-400", border: "border-pink-500/30" },
 };
 
 const getGenreColor = (genre: string) =>
-  genreColors[genre] ?? "bg-slate-500/20 text-slate-400 border border-slate-500/30";
+  genreColors[genre] ?? { bg: "bg-slate-500/20", text: "text-slate-400", border: "border-slate-500/30" };
 
 // ── Props ────────────────────────────────────────────────────────
 type GameCardProps = {
   game: Game;
-  onDelete: (id: number) => void; // Called when Delete is clicked
+  onDelete: (id: number) => void;
 };
 
 export default function GameCard({ game, onDelete }: GameCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const genreColor = getGenreColor(game.genre);
+
   return (
-    // motion.div adds the hover scale/glow animation
     <motion.div
-      whileHover={{ scale: 1.03, y: -4 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="bg-slate-800 rounded-2xl overflow-hidden border border-slate-700
-                 hover:border-green-500/50 hover:shadow-xl hover:shadow-green-500/10
-                 flex flex-col transition-shadow"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ 
+        scale: 1.02, 
+        y: -8,
+        transition: { type: "spring", stiffness: 300, damping: 20 }
+      }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="card-premium group cursor-pointer"
     >
-      {/* ── Game Image ── */}
-      <div className="relative h-48 bg-slate-700 overflow-hidden">
+      {/* ── Game Image with Overlay ── */}
+      <div className="relative h-64 overflow-hidden rounded-t-2xl">
         <Image
           src={game.image_url}
           alt={game.name}
           fill
-          className="object-cover transition-transform duration-500 hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover transition-all duration-700 group-hover:scale-110"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           onError={(e) => {
-            // Fallback if the image fails to load
-            (e.target as HTMLImageElement).src =
-              "https://placehold.co/400x240/1E293B/22C55E?text=Sem+Imagem";
+            (e.target as HTMLImageElement).src = 
+              "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop";
           }}
         />
-        {/* Genre badge overlay */}
-        <div className="absolute top-3 left-3">
-          <span className={`text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm ${getGenreColor(game.genre)}`}>
+        
+        {/* Gradient Overlay */}
+        <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent transition-opacity duration-300 ${
+          isHovered ? 'opacity-100' : 'opacity-70'
+        }`} />
+        
+        {/* Play Button Overlay */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ 
+            opacity: isHovered ? 1 : 0, 
+            scale: isHovered ? 1 : 0.8 
+          }}
+          transition={{ duration: 0.2 }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="p-4 rounded-full glass-strong border border-white/20 hover:bg-white/10 transition-all duration-200"
+          >
+            <Play className="w-6 h-6 text-white" />
+          </motion.button>
+        </motion.div>
+        
+        {/* Genre Badge */}
+        <div className="absolute top-4 left-4">
+          <span className={`text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm ${genreColor.bg} ${genreColor.text} ${genreColor.border} border`}>
             {game.genre}
           </span>
+        </div>
+        
+        {/* Rating Badge */}
+        <div className="absolute top-4 right-4">
+          <div className="flex items-center gap-1 px-2 py-1 rounded-full glass-strong border border-yellow-500/30">
+            <Star className="w-3 h-3 text-yellow-400 fill-current" />
+            <span className="text-xs font-bold text-yellow-400">4.5</span>
+          </div>
         </div>
       </div>
 
       {/* ── Card Body ── */}
-      <div className="p-5 flex flex-col flex-1">
-        {/* Game Name */}
-        <h2 className="text-lg font-bold text-white mb-1 line-clamp-1">{game.name}</h2>
-
-        {/* Meta info */}
-        <div className="flex items-center gap-4 text-xs text-slate-400 mb-2">
-          <span className="flex items-center gap-1">
-            <Monitor className="w-3 h-3" /> {game.platform}
-          </span>
-          <span className="flex items-center gap-1">
-            <Calendar className="w-3 h-3" /> {game.release_year}
-          </span>
+      <div className="p-6 space-y-4">
+        {/* Game Title */}
+        <div className="space-y-2">
+          <h3 className="text-xl font-bold text-white line-clamp-1 group-hover:text-gradient transition-all duration-300">
+            {game.name}
+          </h3>
+          
+          {/* Studio */}
+          {game.studios && (
+            <p className="text-sm text-purple-400 font-medium">
+              {game.studios.name}
+            </p>
+          )}
         </div>
 
-        {/* Relational data: Studio */}
-        {game.studios && (
-          <p className="text-xs text-indigo-400 font-semibold mb-3">
-            Por {game.studios.name}
-          </p>
-        )}
+        {/* Meta Information */}
+        <div className="flex items-center gap-4 text-sm text-gray-400">
+          <div className="flex items-center gap-1.5">
+            <Monitor className="w-4 h-4" />
+            <span>{game.platform}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Calendar className="w-4 h-4" />
+            <span>{game.release_year}</span>
+          </div>
+        </div>
 
-        {/* Description — limited to 2 lines */}
-        <p className="text-sm text-slate-400 line-clamp-2 flex-1">{game.description}</p>
+        {/* Description */}
+        <p className="text-sm text-gray-300 line-clamp-2 leading-relaxed">
+          {game.description}
+        </p>
 
-        {/* ── Action Buttons ── */}
-        <div className="flex gap-2 mt-4">
-          {/* Edit → navigates to /games/edit/[id] */}
+        {/* Action Buttons */}
+        <div className="flex gap-2 pt-2">
+          {/* View Details */}
           <Link
-            href={`/games/edit/${game.id}`}
-            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg
-                       bg-blue-500/10 text-blue-400 border border-blue-500/30
-                       hover:bg-blue-500/20 transition-colors text-sm font-medium"
+            href={`/games/${game.id}`}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg
+                     bg-gradient-to-r from-purple-500/20 to-blue-500/20 
+                     border border-purple-500/30
+                     text-purple-300 font-medium text-sm
+                     hover:from-purple-500/30 hover:to-blue-500/30 
+                     transition-all duration-300"
           >
-            <Pencil className="w-3.5 h-3.5" /> Editar
+            <Eye className="w-4 h-4" />
+            Ver
           </Link>
 
-          {/* Delete → calls onDelete callback */}
-          <button
-            onClick={() => onDelete(game.id)}
-            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg
-                       bg-red-500/10 text-red-400 border border-red-500/30
-                       hover:bg-red-500/20 transition-colors text-sm font-medium"
+          {/* Edit */}
+          <Link
+            href={`/games/edit/${game.id}`}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg
+                     glass-strong border border-white/20
+                     text-white font-medium text-sm
+                     hover:bg-white/10 transition-all duration-300"
           >
-            <Trash2 className="w-3.5 h-3.5" /> Deletar
-          </button>
+            <Pencil className="w-4 h-4" />
+            Editar
+          </Link>
+
+          {/* Delete */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => onDelete(game.id)}
+            className="px-4 py-2.5 rounded-lg
+                     bg-red-500/10 border border-red-500/30
+                     text-red-400 font-medium text-sm
+                     hover:bg-red-500/20 transition-all duration-300"
+          >
+            <Trash2 className="w-4 h-4" />
+          </motion.button>
         </div>
       </div>
     </motion.div>

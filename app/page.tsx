@@ -1,28 +1,32 @@
 "use client";
 
 /**
- * app/page.tsx — Homepage
+ * app/page.tsx — Premium Gaming Homepage
  *
- * Displays all games in a responsive grid.
+ * Modern gaming catalog with cinematic hero section
+ * and horizontal streaming-style game sections
  * Features:
- *  - Fetch games from our API on load
- *  - Filter by genre via a dropdown
- *  - Delete with confirmation modal
- *  - Animated cards with Framer Motion
+ *  - Cinematic hero banner with featured game
+ *  - Horizontal scrolling sections like Netflix/Steam
+ *  - Enhanced search with autocomplete
+ *  - Premium cards with hover effects
+ *  - Smooth animations and transitions
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Gamepad2, Search, Filter, Loader2, AlertCircle } from "lucide-react";
+import { Search, Filter, Loader2, AlertCircle, TrendingUp, Clock, Star, Sparkles } from "lucide-react";
 import { Game } from "@/lib/supabase";
 import GameCard from "@/components/GameCard";
+import GameSection from "@/components/GameSection";
+import HeroSection from "@/components/HeroSection";
 import DeleteModal from "@/components/DeleteModal";
 
 // All filter options (matches the genres used when inserting data)
 const GENRES = [
   "All",
   "FPS",
-  "Sports",
+  "Sports", 
   "Battle Royale",
   "Metroidvania",
   "Sandbox",
@@ -39,6 +43,7 @@ export default function HomePage() {
   const [dbError, setDbError] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [search, setSearch] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
 
   // Delete modal state
   const [deleteTarget, setDeleteTarget] = useState<Game | null>(null);
@@ -75,152 +80,288 @@ export default function HomePage() {
   // ── Delete Flow ───────────────────────────────────────────────
   const handleDeleteRequest = (id: number) => {
     const game = games.find((g) => g.id === id) ?? null;
-    setDeleteTarget(game); // Opens the confirmation modal
+    setDeleteTarget(game);
   };
 
   const handleDeleteConfirm = async () => {
     if (!deleteTarget) return;
     try {
       await fetch(`/api/games/${deleteTarget.id}`, { method: "DELETE" });
-      // Remove the deleted game from local state without re-fetching
       setGames((prev) => prev.filter((g) => g.id !== deleteTarget.id));
     } catch (err) {
       console.error("Failed to delete:", err);
     } finally {
-      setDeleteTarget(null); // Close modal
+      setDeleteTarget(null);
     }
   };
 
-  // ── Search filter (client-side, instant) ─────────────────────
-  const filteredGames = games.filter((g) =>
-    g.name.toLowerCase().includes(search.toLowerCase())
-  );
+  // ── Search and Filter Logic ───────────────────────────────────
+  const filteredGames = useMemo(() => {
+    let filtered = games;
+    
+    // Filter by search term
+    if (search) {
+      filtered = filtered.filter((g) =>
+        g.name.toLowerCase().includes(search.toLowerCase()) ||
+        g.description.toLowerCase().includes(search.toLowerCase()) ||
+        g.genre.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  }, [games, search]);
+
+  // ── Categorize Games for Sections ─────────────────────────────
+  const categorizedGames = useMemo(() => {
+    const shuffled = [...filteredGames].sort(() => Math.random() - 0.5);
+    
+    return {
+      trending: shuffled.slice(0, 8),
+      recent: shuffled.slice(0, 6),
+      topRated: shuffled.slice(2, 10),
+      featured: shuffled.slice(1, 9),
+    };
+  }, [filteredGames]);
+
+  // Get featured game for hero section
+  const featuredGame = games.length > 0 ? games[0] : null;
+
+  // ── Search Suggestions ───────────────────────────────────────
+  const searchSuggestions = useMemo(() => {
+    if (!search || search.length < 2) return [];
+    
+    return filteredGames
+      .filter(game => 
+        game.name.toLowerCase().includes(search.toLowerCase()) ||
+        game.genre.toLowerCase().includes(search.toLowerCase())
+      )
+      .slice(0, 5);
+  }, [search, filteredGames]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-black">
+      {/* ── Hero Section ── */}
+      <HeroSection featuredGame={featuredGame} loading={loading} />
 
-      {/* ── Hero Header ── */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-green-500/20 rounded-lg">
-            <Gamepad2 className="w-6 h-6 text-green-400" />
-          </div>
-          <h1 className="text-3xl font-bold text-white">Catálogo de Jogos</h1>
-        </div>
-        <p className="text-slate-400 ml-14">
-          Navegue, gerencie e descubra seus jogos favoritos
-        </p>
-      </motion.div>
-
-      {/* ── Filters Bar ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.1 }}
-        className="flex flex-col sm:flex-row gap-3 mb-8"
-      >
-        {/* Search input */}
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Pesquisar jogos pelo nome..."
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg
-                       text-white placeholder-slate-400 focus:outline-none focus:ring-2
-                       focus:ring-green-500 text-sm transition-colors"
-          />
-        </div>
-
-        {/* Genre dropdown */}
-        <div className="relative">
-          <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <select
-            value={selectedGenre}
-            onChange={(e) => setSelectedGenre(e.target.value)}
-            className="pl-10 pr-8 py-2.5 bg-slate-800 border border-slate-700 rounded-lg
-                       text-white focus:outline-none focus:ring-2 focus:ring-green-500
-                       text-sm appearance-none cursor-pointer transition-colors"
+      {/* ── Enhanced Search Section ── */}
+      <section className="relative py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-8"
           >
-            {GENRES.map((g) => (
-              <option key={g} value={g}>{g === "All" ? "Todos os Gêneros" : g}</option>
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+              Descubra seu <span className="text-gradient">próximo jogo</span>
+            </h2>
+            <p className="text-gray-400 text-lg">
+              Explore milhares de jogos dos mais variados gêneros
+            </p>
+          </motion.div>
+
+          {/* Enhanced Search Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="relative"
+          >
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
+                placeholder="Buscar jogos, gêneros, estúdios..."
+                className="w-full pl-12 pr-16 py-4 glass-strong border border-white/10 rounded-2xl
+                         text-white placeholder-gray-500 focus:outline-none focus:ring-2
+                         focus:ring-purple-500 text-lg transition-all duration-300"
+              />
+              
+              {/* Search Icon Button */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-xl
+                         bg-gradient-to-r from-purple-500 to-blue-500 text-white
+                         hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
+              >
+                <Search className="w-5 h-5" />
+              </motion.button>
+            </div>
+
+            {/* Search Suggestions Dropdown */}
+            <AnimatePresence>
+              {searchFocused && searchSuggestions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute top-full left-0 right-0 mt-2 glass-strong border border-white/10 rounded-2xl overflow-hidden z-50"
+                >
+                  {searchSuggestions.map((game) => (
+                    <motion.div
+                      key={game.id}
+                      whileHover={{ backgroundColor: 'rgba(139, 92, 246, 0.1)' }}
+                      className="flex items-center gap-4 p-4 cursor-pointer transition-colors"
+                    >
+                      <div className="w-12 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                        <img
+                          src={game.image_url}
+                          alt={game.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 
+                              "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=100&h=150&fit=crop";
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-white font-medium truncate">{game.name}</h4>
+                        <p className="text-gray-400 text-sm">{game.genre} • {game.platform}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Genre Filter Pills */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="flex flex-wrap justify-center gap-3 mt-8"
+          >
+            {GENRES.map((genre) => (
+              <motion.button
+                key={genre}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setSelectedGenre(genre)}
+                className={`px-6 py-2 rounded-full font-medium text-sm transition-all duration-300 ${
+                  selectedGenre === genre
+                    ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg"
+                    : "glass-strong text-gray-300 hover:bg-white/10"
+                }`}
+              >
+                {genre === "All" ? "Todos" : genre}
+              </motion.button>
             ))}
-          </select>
+          </motion.div>
         </div>
-      </motion.div>
+      </section>
 
       {/* ── Database Error Banner ── */}
       {dbError && !loading && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-start gap-3 bg-yellow-500/10 border border-yellow-500/30
-                     rounded-xl p-4 mb-6 text-yellow-300"
+          className="mx-4 sm:mx-6 lg:mx-8 mb-8"
         >
-          <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
-          <div>
-            <p className="font-semibold text-sm">Banco de dados não conectado</p>
-            <p className="text-xs text-yellow-400/80 mt-0.5">
-              Abra o <code className="bg-yellow-500/20 px-1 rounded">.env.local</code> e adicione sua URL e chave anon do Supabase, depois reinicie o servidor.
-            </p>
+          <div className="max-w-7xl mx-auto flex items-start gap-3 bg-yellow-500/10 border border-yellow-500/30
+                        rounded-xl p-4 text-yellow-300">
+            <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
+            <div>
+              <p className="font-semibold text-sm">Banco de dados não conectado</p>
+              <p className="text-xs text-yellow-400/80 mt-0.5">
+                Configure o arquivo <code className="bg-yellow-500/20 px-1 rounded">.env.local</code> com as credenciais do Supabase.
+              </p>
+            </div>
           </div>
         </motion.div>
       )}
 
-      {/* ── Games Count ── */}
-      {!dbError && (
-        <p className="text-slate-500 text-sm mb-5">
-          {loading ? "Carregando..." : `${filteredGames.length} jogo${filteredGames.length !== 1 ? "s" : ""} encontrado${filteredGames.length !== 1 ? "s" : ""}`}
-        </p>
+      {/* ── Loading State ── */}
+      {loading && (
+        <div className="flex items-center justify-center py-32">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full"
+          />
+        </div>
       )}
 
-      {/* ── Loading Spinner ── */}
-      {loading && (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 text-green-400 animate-spin" />
+      {/* ── Game Sections ── */}
+      {!loading && filteredGames.length > 0 && (
+        <div className="space-y-20 px-4 sm:px-6 lg:px-8 pb-20">
+          {/* Trending Games */}
+          <GameSection
+            title={
+              <span className="flex items-center gap-3">
+                <TrendingUp className="w-6 h-6 text-purple-400" />
+                Em Alta
+              </span>
+            }
+            games={categorizedGames.trending}
+            onDelete={handleDeleteRequest}
+            gradient="purple"
+          />
+
+          {/* Recent Releases */}
+          <GameSection
+            title={
+              <span className="flex items-center gap-3">
+                <Clock className="w-6 h-6 text-blue-400" />
+                Lançamentos
+              </span>
+            }
+            games={categorizedGames.recent}
+            onDelete={handleDeleteRequest}
+            gradient="blue"
+          />
+
+          {/* Top Rated */}
+          <GameSection
+            title={
+              <span className="flex items-center gap-3">
+                <Star className="w-6 h-6 text-yellow-400" />
+                Mais Bem Avaliados
+              </span>
+            }
+            games={categorizedGames.topRated}
+            onDelete={handleDeleteRequest}
+            gradient="green"
+          />
+
+          {/* Featured Games */}
+          <GameSection
+            title={
+              <span className="flex items-center gap-3">
+                <Sparkles className="w-6 h-6 text-pink-400" />
+                Destaques
+              </span>
+            }
+            games={categorizedGames.featured}
+            onDelete={handleDeleteRequest}
+            gradient="pink"
+          />
         </div>
       )}
 
       {/* ── Empty State ── */}
-      {!loading && filteredGames.length === 0 && (
+      {!loading && filteredGames.length === 0 && !dbError && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="text-center py-20"
+          className="text-center py-32 px-4"
         >
-          <Gamepad2 className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-slate-400">Nenhum jogo encontrado</h3>
-          <p className="text-slate-500 mt-2">
-            {search ? `Nenhum jogo corresponde a "${search}"` : "Tente um filtro diferente."}
-          </p>
-        </motion.div>
-      )}
-
-      {/* ── Game Grid ── */}
-      {!loading && (
-        <motion.div
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-        >
-          <AnimatePresence>
-            {filteredGames.map((game) => (
-              <motion.div
-                key={game.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.2 }}
-              >
-                <GameCard game={game} onDelete={handleDeleteRequest} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
+          <div className="max-w-md mx-auto">
+            <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center">
+              <Search className="w-10 h-10 text-gray-400" />
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Nenhum jogo encontrado</h3>
+            <p className="text-gray-400">
+              {search ? `Nenhum jogo corresponde a "${search}"` : "Tente ajustar os filtros para encontrar jogos."}
+            </p>
+          </div>
         </motion.div>
       )}
 
