@@ -67,3 +67,4 @@ npm run dev
 
 *(Observação: É necessário configurar um banco de dados no Supabase e adicionar as credenciais no arquivo `.env.local` para que os dados carreguem corretamente).*
 
+6. https://www.notion.so/Projeto-Cat-logo-de-Jogos-Documenta-o-T-cnica-34286de69cda46b8bfa898dd000db3a5?source=copy_link
