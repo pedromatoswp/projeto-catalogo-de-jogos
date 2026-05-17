@@ -28,6 +28,7 @@ export type Game = {
   release_year: number;
   description: string;
   image_url: string;
+  trailer_url?: string | null;
   studio_id?: number | null;
   studios?: { name: string } | null;
 };

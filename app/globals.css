@@ -7,38 +7,38 @@
 
 @import "tailwindcss";
 
-/* ── CSS Custom Properties for Premium Gaming Theme ── */
+/* ── CSS Custom Properties for Premium Black & White Theme ── */
 :root {
   /* Core Colors */
-  --bg-primary: #0F1117;
-  --bg-surface: #1A1D26;
-  --bg-surface-hover: #232735;
-  --bg-card: #1E2129;
+  --bg-primary: #000000;
+  --bg-surface: #0a0a0a;
+  --bg-surface-hover: #141414;
+  --bg-card: #0d0d0d;
   
-  /* Accent Colors */
-  --accent-purple: #8B5CF6;
-  --accent-blue: #3B82F6;
-  --accent-green: #10B981;
-  --accent-pink: #EC4899;
+  /* Accent Colors - Monochrome */
+  --accent-white: #ffffff;
+  --accent-gray-light: #e5e5e5;
+  --accent-gray-medium: #a3a3a3;
+  --accent-gray-dark: #404040;
   
   /* Text Colors */
-  --text-primary: #F3F4F6;
-  --text-secondary: #9CA3AF;
-  --text-muted: #6B7280;
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #525252;
   
   /* Glass Effect */
-  --glass-bg: rgba(26, 29, 38, 0.8);
-  --glass-border: rgba(139, 92, 246, 0.2);
+  --glass-bg: rgba(20, 20, 20, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.1);
   
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
-  --gradient-card: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-  --gradient-hover: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
+  --gradient-primary: linear-gradient(135deg, #ffffff 0%, #a3a3a3 100%);
+  --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(163, 163, 163, 0.05) 100%);
+  --gradient-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(163, 163, 163, 0.1) 100%);
   
   /* Shadows */
-  --shadow-glow: 0 0 30px rgba(139, 92, 246, 0.3);
-  --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.3);
-  --shadow-hover: 0 20px 60px rgba(139, 92, 246, 0.2);
+  --shadow-glow: 0 0 30px rgba(255, 255, 255, 0.1);
+  --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --shadow-hover: 0 20px 60px rgba(255, 255, 255, 0.05);
 }
 
 /* ── Base Styles ── */
@@ -69,25 +69,25 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  background: linear-gradient(135deg, var(--accent-gray-medium), var(--accent-gray-dark));
   border-radius: 4px;
   transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  background: linear-gradient(135deg, var(--accent-white), var(--accent-gray-medium));
   box-shadow: var(--shadow-glow);
 }
 
 /* ── Selection Styling ── */
 ::selection {
-  background: var(--accent-purple);
-  color: white;
+  background: var(--accent-white);
+  color: black;
 }
 
 /* ── Focus Styles ── */
 :focus-visible {
-  outline: 2px solid var(--accent-purple);
+  outline: 2px solid var(--accent-white);
   outline-offset: 2px;
 }
 
@@ -100,23 +100,19 @@ body {
 }
 
 .glass-strong {
-  background: rgba(26, 29, 38, 0.95);
+  background: rgba(20, 20, 20, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 /* ── Glow Effects ── */
-.glow-purple {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+.glow-white {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
-.glow-blue {
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-}
-
-.glow-green {
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+.glow-gray {
+  box-shadow: 0 0 20px rgba(163, 163, 163, 0.3);
 }
 
 /* ── Text Gradients ── */
@@ -163,7 +159,7 @@ body {
 /* ── Card Styles ── */
 .card-premium {
   background: var(--bg-card);
-  border: 1px solid rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   transition: all 0.3s ease;
   position: relative;
@@ -189,13 +185,13 @@ body {
 .card-premium:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-card);
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 /* ── Input Styles ── */
 .input-premium {
   background: var(--bg-surface);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: var(--text-primary);
   padding: 12px 16px;
   border-radius: 12px;
@@ -203,15 +199,15 @@ body {
 }
 
 .input-premium:focus {
-  border-color: var(--accent-purple);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  border-color: var(--accent-white);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
 }
 
 /* ── Select Element Styling ── */
 select {
   background: var(--bg-surface);
   color: var(--text-primary);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 select option {
@@ -223,11 +219,11 @@ select option {
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 1;
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
   }
   50% {
     opacity: 0.7;
-    box-shadow: 0 0 30px rgba(139, 92, 246, 0.6);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
   }
 }
 
@@ -314,7 +310,7 @@ body {
 }
 
 .gradient-border-animated {
-  background: linear-gradient(90deg, #8B5CF6, #3B82F6, #10B981, #EC4899, #8B5CF6);
+  background: linear-gradient(90deg, #ffffff, #a3a3a3, #525252, #a3a3a3, #ffffff);
   background-size: 300% 300%;
   animation: gradient-border 6s ease infinite;
 }

@@ -179,7 +179,7 @@ export default function HomePage() {
                 placeholder="Buscar jogos, gêneros, estúdios..."
                 className="w-full pl-12 pr-16 py-4 glass-strong border border-white/10 rounded-2xl
                          text-white placeholder-gray-500 focus:outline-none focus:ring-2
-                         focus:ring-purple-500 text-lg transition-all duration-300"
+                         focus:ring-white text-lg transition-all duration-300"
               />
               
               {/* Search Icon Button */}
@@ -187,8 +187,8 @@ export default function HomePage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-xl
-                         bg-gradient-to-r from-purple-500 to-blue-500 text-white
-                         hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
+                         bg-gradient-to-r from-white to-gray-300 text-black
+                         hover:shadow-lg hover:shadow-white/25 transition-all duration-300"
               >
                 <Search className="w-5 h-5" />
               </motion.button>
@@ -206,7 +206,7 @@ export default function HomePage() {
                   {searchSuggestions.map((game) => (
                     <motion.div
                       key={game.id}
-                      whileHover={{ backgroundColor: 'rgba(139, 92, 246, 0.1)' }}
+                      whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
                       className="flex items-center gap-4 p-4 cursor-pointer transition-colors"
                     >
                       <div className="w-12 h-16 rounded-lg overflow-hidden flex-shrink-0">
@@ -247,7 +247,7 @@ export default function HomePage() {
                 onClick={() => setSelectedGenre(genre)}
                 className={`px-6 py-2 rounded-full font-medium text-sm transition-all duration-300 ${
                   selectedGenre === genre
-                    ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-white to-gray-300 text-black shadow-lg"
                     : "glass-strong text-gray-300 hover:bg-white/10"
                 }`}
               >
@@ -296,52 +296,52 @@ export default function HomePage() {
           <GameSection
             title={
               <span className="flex items-center gap-3">
-                <TrendingUp className="w-6 h-6 text-purple-400" />
+                <TrendingUp className="w-6 h-6 text-white" />
                 Em Alta
               </span>
             }
             games={categorizedGames.trending}
             onDelete={handleDeleteRequest}
-            gradient="purple"
+            gradient="white"
           />
 
           {/* Recent Releases */}
           <GameSection
             title={
               <span className="flex items-center gap-3">
-                <Clock className="w-6 h-6 text-blue-400" />
+                <Clock className="w-6 h-6 text-gray-300" />
                 Lançamentos
               </span>
             }
             games={categorizedGames.recent}
             onDelete={handleDeleteRequest}
-            gradient="blue"
+            gradient="gray"
           />
 
           {/* Top Rated */}
           <GameSection
             title={
               <span className="flex items-center gap-3">
-                <Star className="w-6 h-6 text-yellow-400" />
+                <Star className="w-6 h-6 text-white" />
                 Mais Bem Avaliados
               </span>
             }
             games={categorizedGames.topRated}
             onDelete={handleDeleteRequest}
-            gradient="green"
+            gradient="white"
           />
 
           {/* Featured Games */}
           <GameSection
             title={
               <span className="flex items-center gap-3">
-                <Sparkles className="w-6 h-6 text-pink-400" />
+                <Sparkles className="w-6 h-6 text-gray-300" />
                 Destaques
               </span>
             }
             games={categorizedGames.featured}
             onDelete={handleDeleteRequest}
-            gradient="pink"
+            gradient="gray"
           />
         </div>
       )}
@@ -354,7 +354,7 @@ export default function HomePage() {
           className="text-center py-32 px-4"
         >
           <div className="max-w-md mx-auto">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center">
+            <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-white/10 to-gray-400/10 flex items-center justify-center">
               <Search className="w-10 h-10 text-gray-400" />
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">Nenhum jogo encontrado</h3>

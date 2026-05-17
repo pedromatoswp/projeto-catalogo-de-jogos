@@ -17,21 +17,19 @@ type GameSectionProps = {
   title: React.ReactNode;
   games: Game[];
   onDelete: (id: number) => void;
-  gradient?: "purple" | "blue" | "green" | "pink";
+  gradient?: "white" | "gray";
 };
 
 const gradients = {
-  purple: "from-purple-500/20 to-purple-500/5",
-  blue: "from-blue-500/20 to-blue-500/5",
-  green: "from-green-500/20 to-green-500/5",
-  pink: "from-pink-500/20 to-pink-500/5",
+  white: "from-white/20 to-white/5",
+  gray: "from-gray-400/20 to-gray-400/5",
 };
 
 export default function GameSection({ 
   title, 
   games, 
   onDelete, 
-  gradient = "purple" 
+  gradient = "white" 
 }: GameSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 

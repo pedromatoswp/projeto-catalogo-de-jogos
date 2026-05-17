@@ -81,13 +81,21 @@ export default function GameDetailPage() {
     setIsTrailerPlaying(true);
   };
 
+  // Extract YouTube video ID from URL
+  const getYouTubeVideoId = (url: string) => {
+    if (!url) return null;
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full"
+          className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full"
         />
       </div>
     );
@@ -96,6 +104,8 @@ export default function GameDetailPage() {
   if (!game) {
     return null;
   }
+
+  const videoId = game.trailer_url ? getYouTubeVideoId(game.trailer_url) : null;
 
   return (
     <div className="min-h-screen bg-black">
@@ -150,9 +160,9 @@ export default function GameDetailPage() {
                 className="space-y-6"
               >
                 {/* Genre Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-strong border border-purple-500/30">
-                  <Gamepad2 className="w-4 h-4 text-purple-400" />
-                  <span className="text-sm font-medium text-purple-300">{game.genre}</span>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-strong border border-white/30">
+                  <Gamepad2 className="w-4 h-4 text-white" />
+                  <span className="text-sm font-medium text-white">{game.genre}</span>
                 </div>
 
                 {/* Game Title */}
@@ -162,7 +172,7 @@ export default function GameDetailPage() {
 
                 {/* Studio */}
                 {game.studios && (
-                  <p className="text-lg text-purple-400 font-medium">
+                  <p className="text-lg text-gray-300 font-medium">
                     {game.studios.name}
                   </p>
                 )}
@@ -195,15 +205,17 @@ export default function GameDetailPage() {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-4">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handlePlayTrailer}
-                    className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl font-semibold text-lg shadow-2xl hover:shadow-purple-500/25 transition-all duration-300"
-                  >
-                    <Play className="w-6 h-6" />
-                    Assistir Trailer
-                  </motion.button>
+                  {videoId && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handlePlayTrailer}
+                      className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-white to-gray-300 text-black rounded-xl font-semibold text-lg shadow-2xl hover:shadow-white/25 transition-all duration-300"
+                    >
+                      <Play className="w-6 h-6" />
+                      Assistir Trailer
+                    </motion.button>
+                  )}
                   
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -241,7 +253,7 @@ export default function GameDetailPage() {
               >
                 <div className="relative">
                   {/* Glow Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-3xl blur-3xl" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-gray-400/10 rounded-3xl blur-3xl" />
                   
                   {/* Game Cover */}
                   <motion.div
@@ -249,7 +261,7 @@ export default function GameDetailPage() {
                     transition={{ duration: 0.3 }}
                     className="relative glass-strong rounded-3xl p-8 border border-white/10"
                   >
-                    <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-gradient-to-br from-purple-500/20 to-blue-500/20">
+                    <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-gradient-to-br from-white/5 to-gray-400/5">
                       <Image
                         src={game.image_url}
                         alt={game.name}
@@ -394,14 +406,26 @@ export default function GameDetailPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="relative aspect-video bg-black rounded-2xl overflow-hidden">
-                {/* Placeholder for trailer */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <Play className="w-16 h-16 text-white mb-4 mx-auto" />
-                    <p className="text-white text-lg">Trailer would play here</p>
-                    <p className="text-gray-400 text-sm mt-2">Click outside to close</p>
+                {videoId ? (
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                    title="Game Trailer"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <Play className="w-16 h-16 text-white mb-4 mx-auto" />
+                      <p className="text-white text-lg">Trailer não disponível</p>
+                      <p className="text-gray-400 text-sm mt-2">Click outside to close</p>
+                    </div>
                   </div>
-                </div>
+                )}
                 
                 {/* Close Button */}
                 <button

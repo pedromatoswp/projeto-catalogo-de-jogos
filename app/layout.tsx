@@ -14,9 +14,9 @@ import Navbar from "@/components/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "GameCatalog — Discover & Manage Your Games",
+  title: "NOVA — Premium Game Catalog",
   description:
-    "A modern game catalog built with Next.js and Supabase. Browse, add, edit, and delete games with a beautiful gamer-themed UI.",
+    "A premium game catalog platform. Discover, manage, and explore games with a modern minimalist aesthetic.",
 };
 
 export default function RootLayout({

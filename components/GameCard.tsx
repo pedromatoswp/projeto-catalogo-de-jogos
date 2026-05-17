@@ -93,16 +93,16 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
         
         {/* Genre Badge */}
         <div className="absolute top-4 left-4">
-          <span className={`text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm ${genreColor.bg} ${genreColor.text} ${genreColor.border} border`}>
+          <span className="text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm bg-white/10 text-white border border-white/30">
             {game.genre}
           </span>
         </div>
-        
+
         {/* Rating Badge */}
         <div className="absolute top-4 right-4">
-          <div className="flex items-center gap-1 px-2 py-1 rounded-full glass-strong border border-yellow-500/30">
-            <Star className="w-3 h-3 text-yellow-400 fill-current" />
-            <span className="text-xs font-bold text-yellow-400">4.5</span>
+          <div className="flex items-center gap-1 px-2 py-1 rounded-full glass-strong border border-white/30">
+            <Star className="w-3 h-3 text-white fill-current" />
+            <span className="text-xs font-bold text-white">4.5</span>
           </div>
         </div>
       </div>
@@ -117,7 +117,7 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
           
           {/* Studio */}
           {game.studios && (
-            <p className="text-sm text-purple-400 font-medium">
+            <p className="text-sm text-gray-300 font-medium">
               {game.studios.name}
             </p>
           )}
@@ -146,10 +146,10 @@ export default function GameCard({ game, onDelete }: GameCardProps) {
           <Link
             href={`/games/${game.id}`}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg
-                     bg-gradient-to-r from-purple-500/20 to-blue-500/20 
-                     border border-purple-500/30
-                     text-purple-300 font-medium text-sm
-                     hover:from-purple-500/30 hover:to-blue-500/30 
+                     bg-gradient-to-r from-white/10 to-gray-400/10 
+                     border border-white/30
+                     text-white font-medium text-sm
+                     hover:from-white/20 hover:to-gray-400/20 
                      transition-all duration-300"
           >
             <Eye className="w-4 h-4" />

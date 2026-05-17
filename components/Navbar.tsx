@@ -53,12 +53,12 @@ export default function Navbar() {
               <motion.div
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
-                className="p-2.5 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300"
+                className="p-2.5 bg-gradient-to-br from-white to-gray-400 rounded-xl shadow-lg group-hover:shadow-white/25 transition-all duration-300"
               >
-                <Gamepad2 className="w-5 h-5 text-white" />
+                <Gamepad2 className="w-5 h-5 text-black" />
               </motion.div>
               <span className="text-xl font-bold text-white tracking-tight">
-                Game<span className="text-gradient">Vault</span>
+                NOVA
               </span>
             </Link>
 
@@ -93,7 +93,7 @@ export default function Navbar() {
               >
                 <Link
                   href="/games/new"
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg font-medium text-sm shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-white to-gray-300 text-black rounded-lg font-medium text-sm shadow-lg hover:shadow-white/25 transition-all duration-300"
                 >
                   <Plus className="w-4 h-4" />
                   Novo Jogo
@@ -141,7 +141,7 @@ export default function Navbar() {
                 href="/"
                 className={`block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                   pathname === "/" 
-                    ? "bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-white border border-purple-500/30" 
+                    ? "bg-gradient-to-r from-white/20 to-gray-400/20 text-white border border-white/30" 
                     : "text-gray-300 hover:bg-white/5"
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
@@ -152,7 +152,7 @@ export default function Navbar() {
                 href="/games/new"
                 className={`block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                   pathname === "/games/new" 
-                    ? "bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-white border border-purple-500/30" 
+                    ? "bg-gradient-to-r from-white/20 to-gray-400/20 text-white border border-white/30" 
                     : "text-gray-300 hover:bg-white/5"
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
@@ -164,7 +164,7 @@ export default function Navbar() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg font-medium text-sm"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-white to-gray-300 text-black rounded-lg font-medium text-sm"
                 >
                   <Search className="w-4 h-4" />
                   Buscar

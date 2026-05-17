@@ -10,7 +10,7 @@
 
 import { useState } from "react";
 import { Game } from "@/lib/supabase";
-import { Save, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Save, Image as ImageIcon, Loader2, Play } from "lucide-react";
 
 // All genres the user can choose from
 const GENRES = [
@@ -60,6 +60,7 @@ export default function GameForm({
   );
   const [description, setDescription] = useState(initialData.description ?? "");
   const [imageUrl, setImageUrl] = useState(initialData.image_url ?? "");
+  const [trailerUrl, setTrailerUrl] = useState(initialData.trailer_url ?? "");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -74,6 +75,7 @@ export default function GameForm({
       newErrors.releaseYear = "Insira um ano válido (1970–2030)";
     if (!description.trim()) newErrors.description = "A descrição é obrigatória";
     if (!imageUrl.trim()) newErrors.imageUrl = "A URL da imagem é obrigatória";
+    if (trailerUrl && !isValidYouTubeUrl(trailerUrl)) newErrors.trailerUrl = "URL do trailer inválida (deve ser do YouTube)";
     return newErrors;
   };
 
@@ -95,11 +97,18 @@ export default function GameForm({
         release_year: Number(releaseYear),
         description: description.trim(),
         image_url: imageUrl.trim(),
+        trailer_url: trailerUrl.trim() || null,
         studio_id: Number(studioId),
       });
     } finally {
       setLoading(false);
     }
+  };
+
+  // ── YouTube URL Validator ─────────────────────────────────────
+  const isValidYouTubeUrl = (url: string) => {
+    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+    return youtubeRegex.test(url);
   };
 
   // ── Reusable input class ──────────────────────────────────────
@@ -238,6 +247,24 @@ export default function GameForm({
             <img src={imageUrl} alt="preview" className="w-full h-full object-cover" />
           </div>
         )}
+      </div>
+
+      {/* ── Trailer URL (Optional) ── */}
+      <div>
+        <label className="block text-sm font-medium text-slate-300 mb-1 flex items-center gap-1">
+          <Play className="w-3.5 h-3.5" /> URL do Trailer (YouTube) <span className="text-gray-500">(opcional)</span>
+        </label>
+        <input
+          type="url"
+          value={trailerUrl}
+          onChange={(e) => setTrailerUrl(e.target.value)}
+          placeholder="https://www.youtube.com/watch?v=..."
+          className={inputClass("trailerUrl")}
+        />
+        {errors.trailerUrl && <p className="text-red-400 text-xs mt-1">{errors.trailerUrl}</p>}
+        <p className="text-xs text-gray-500 mt-1">
+          Cole o link do trailer do YouTube para exibir na página do jogo
+        </p>
       </div>
 
       {/* ── Submit Button ── */}
