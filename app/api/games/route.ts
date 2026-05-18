@@ -17,6 +17,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const genre = searchParams.get("genre"); // e.g. ?genre=FPS
 
+    console.log('GET /api/games - Fetching games with genre:', genre);
+
     // Build the query
     let query = supabase
       .from("games")
@@ -30,14 +32,20 @@ export async function GET(request: NextRequest) {
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase query error:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
+      throw error;
+    }
+
+    console.log('Successfully fetched', data?.length || 0, 'games');
 
     // Return the list of games as JSON (always an array)
     return NextResponse.json(data ?? []);
   } catch (error) {
     console.error("GET /api/games error:", error);
     return NextResponse.json(
-      { error: "Failed to fetch games" },
+      { error: "Failed to fetch games", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

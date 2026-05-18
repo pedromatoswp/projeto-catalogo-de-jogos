@@ -27,6 +27,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Game } from "@/lib/supabase";
 import GameCard from "@/components/GameCard";
+import CommentsSection from "@/components/CommentsSection";
+import LibraryButton from "@/components/LibraryButton";
 
 export default function GameDetailPage() {
   const params = useParams();
@@ -216,7 +218,9 @@ export default function GameDetailPage() {
                       Assistir Trailer
                     </motion.button>
                   )}
-                  
+
+                  <LibraryButton gameId={game.id} />
+
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -385,6 +389,13 @@ export default function GameDetailPage() {
               ))}
             </div>
           </div>
+        </section>
+      )}
+
+      {/* ── Comments Section ── */}
+      {game && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <CommentsSection gameId={game.id} />
         </section>
       )}
 

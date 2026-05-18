@@ -11,10 +11,20 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Gamepad2, Search, Plus, User, Menu, X } from "lucide-react";
+import {
+  Search,
+  Plus,
+  User,
+  Menu,
+  X,
+  Gamepad2,
+  LogOut,
+} from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { user, signOut } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -33,6 +43,11 @@ export default function Navbar() {
     pathname === href
       ? "text-white font-semibold"
       : "text-gray-300 hover:text-white transition-colors";
+
+  const handleSignOut = async () => {
+    await signOut();
+    setMobileMenuOpen(false);
+  };
 
   return (
     <>
@@ -101,13 +116,26 @@ export default function Navbar() {
               </motion.div>
 
               {/* User Profile */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200"
-              >
-                <User className="w-4 h-4 text-gray-300" />
-              </motion.button>
+              {user ? (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleSignOut}
+                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200"
+                >
+                  <LogOut className="w-4 h-4 text-gray-300" />
+                </motion.button>
+              ) : (
+                <Link href="/auth/signin">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200"
+                  >
+                    <User className="w-4 h-4 text-gray-300" />
+                  </motion.button>
+                </Link>
+              )}
             </div>
 
             {/* ── Mobile Menu Button ── */}
@@ -173,8 +201,17 @@ export default function Navbar() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200"
+                  onClick={user ? handleSignOut : undefined}
                 >
-                  <User className="w-4 h-4 text-gray-300" />
+                  {user ? (
+                    <Link href="/auth/signin">
+                      <LogOut className="w-4 h-4 text-gray-300" />
+                    </Link>
+                  ) : (
+                    <Link href="/auth/signin">
+                      <User className="w-4 h-4 text-gray-300" />
+                    </Link>
+                  )}
                 </motion.button>
               </div>
             </div>

@@ -5,20 +5,195 @@
 -- Limpar tabelas antigas (caso você já tenha rodado antes)
 DROP TABLE IF EXISTS games;
 DROP TABLE IF EXISTS studios;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS user_library;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS comment_likes;
+DROP TABLE IF EXISTS follows;
+DROP TABLE IF EXISTS lists;
+DROP TABLE IF EXISTS list_games;
+DROP TABLE IF EXISTS list_likes;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS achievements;
+DROP TABLE IF EXISTS user_achievements;
+DROP TABLE IF EXISTS activities;
+DROP TABLE IF EXISTS game_screenshots;
 
 -- ────────────────────────────────────────────────────────────
 -- 1. CRIAR TABELA: studios (Lado "1" do relacionamento)
 -- ────────────────────────────────────────────────────────────
 CREATE TABLE studios (
-  id SERIAL PRIMARY KEY,
+  id   SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
-  country VARCHAR(50) NOT NULL
+  country VARCHAR(50)
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 2. CRIAR TABELA: users (Sistema de usuários)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE users (
+  id           SERIAL PRIMARY KEY,
+  username     VARCHAR(50) UNIQUE NOT NULL,
+  email        VARCHAR(255) UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  full_name    VARCHAR(100),
+  avatar_url   TEXT,
+  bio          TEXT,
+  is_admin     BOOLEAN DEFAULT FALSE,
+  created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 3. CRIAR TABELA: user_library (Biblioteca pessoal)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE user_library (
+  id         SERIAL PRIMARY KEY,
+  user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  game_id    INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+  status     VARCHAR(20) NOT NULL CHECK (status IN ('playing', 'completed', 'want_to_play', 'abandoned')),
+  added_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(user_id, game_id)
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 4. CRIAR TABELA: comments (Comentários em jogos)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE comments (
+  id         SERIAL PRIMARY KEY,
+  user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  game_id    INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+  content    TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 5. CRIAR TABELA: comment_likes (Curtidas em comentários)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE comment_likes (
+  id         SERIAL PRIMARY KEY,
+  comment_id INTEGER NOT NULL REFERENCES comments(id) ON DELETE CASCADE,
+  user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(comment_id, user_id)
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 6. CRIAR TABELA: follows (Sistema de seguidores)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE follows (
+  id          SERIAL PRIMARY KEY,
+  follower_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  following_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(follower_id, following_id),
+  CHECK (follower_id != following_id)
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 7. CRIAR TABELA: lists (Listas públicas)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE lists (
+  id          SERIAL PRIMARY KEY,
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title       VARCHAR(100) NOT NULL,
+  description TEXT,
+  cover_url   TEXT,
+  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 8. CRIAR TABELA: list_games (Jogos nas listas)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE list_games (
+  id        SERIAL PRIMARY KEY,
+  list_id   INTEGER NOT NULL REFERENCES lists(id) ON DELETE CASCADE,
+  game_id   INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+  added_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(list_id, game_id)
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 9. CRIAR TABELA: list_likes (Curtidas em listas)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE list_likes (
+  id        SERIAL PRIMARY KEY,
+  list_id   INTEGER NOT NULL REFERENCES lists(id) ON DELETE CASCADE,
+  user_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(list_id, user_id)
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 10. CRIAR TABELA: reviews (Avaliações de jogos)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE reviews (
+  id              SERIAL PRIMARY KEY,
+  user_id         INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  game_id         INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+  overall_rating  INTEGER NOT NULL CHECK (overall_rating >= 1 AND overall_rating <= 10),
+  gameplay_rating INTEGER CHECK (gameplay_rating >= 1 AND gameplay_rating <= 10),
+  story_rating    INTEGER CHECK (story_rating >= 1 AND story_rating <= 10),
+  graphics_rating INTEGER CHECK (graphics_rating >= 1 AND graphics_rating <= 10),
+  sound_rating    INTEGER CHECK (sound_rating >= 1 AND sound_rating <= 10),
+  multiplayer_rating INTEGER CHECK (multiplayer_rating >= 1 AND multiplayer_rating <= 10),
+  fun_rating      INTEGER CHECK (fun_rating >= 1 AND fun_rating <= 10),
+  content         TEXT,
+  created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(user_id, game_id)
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 11. CRIAR TABELA: achievements (Conquistas)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE achievements (
+  id          SERIAL PRIMARY KEY,
+  name        VARCHAR(100) NOT NULL,
+  description TEXT,
+  icon_url    TEXT,
+  badge_color VARCHAR(20) DEFAULT 'gray'
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 12. CRIAR TABELA: user_achievements (Conquistas desbloqueadas)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE user_achievements (
+  id             SERIAL PRIMARY KEY,
+  user_id        INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  achievement_id INTEGER NOT NULL REFERENCES achievements(id) ON DELETE CASCADE,
+  unlocked_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(user_id, achievement_id)
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 13. CRIAR TABELA: activities (Timeline de atividades)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE activities (
+  id         SERIAL PRIMARY KEY,
+  user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  type       VARCHAR(50) NOT NULL,
+  content    TEXT,
+  game_id    INTEGER REFERENCES games(id) ON DELETE CASCADE,
+  list_id    INTEGER REFERENCES lists(id) ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ────────────────────────────────────────────────────────────
+-- 14. CRIAR TABELA: game_screenshots (Screenshots de jogos)
+-- ────────────────────────────────────────────────────────────
+CREATE TABLE game_screenshots (
+  id        SERIAL PRIMARY KEY,
+  game_id   INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+  image_url TEXT NOT NULL,
+  order_num INTEGER DEFAULT 0
 );
 
 -- ────────────────────────────────────────────────────────────
 -- 2. CRIAR TABELA: games (Lado "N" do relacionamento)
 -- ────────────────────────────────────────────────────────────
--- Veja a coluna "studio_id": Ela é uma CHAVE ESTRANGEIRA (Foreign Key).
 -- Isso cria o relacionamento: 1 Estúdio pode ter N Jogos.
 CREATE TABLE games (
   id           SERIAL PRIMARY KEY,

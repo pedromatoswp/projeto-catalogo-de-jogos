@@ -9,6 +9,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 // Google Font: Inter — clean, modern, easy to read
 const inter = Inter({ subsets: ["latin"] });
@@ -27,10 +28,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter.className} bg-black text-white min-h-screen`}>
-        {/* Navbar is shared across all pages */}
-        <Navbar />
-        {/* Page content renders here with proper spacing for fixed navbar */}
-        <main className="pt-16">{children}</main>
+        <AuthProvider>
+          <Navbar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
