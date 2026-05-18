@@ -33,7 +33,7 @@ Trabalhamos de forma colaborativa simulando o mercado de trabalho real, utilizan
 | **Daniel** | Banco de Dados (Modelagem, Queries, Supabase) |
 | **Aron** | Backend (API, Rotas, Conexão com Banco) |
 | **Guilherme** | Frontend (Interfaces, Criação de Componentes) |
-| **Pedro Garcia** | Frontend (UI/UX, Animações e Responsividade) |
+| **Pedro Garcia** | Backend (API, Rotas, Criação de Componentes) |
 | **Pedro Matos** | Frontend (Integração da Tela Principal e GitHub) |
 | **Kaluanã** | Documentação, Explicações e Tratamento de Erros (QA) |
 
